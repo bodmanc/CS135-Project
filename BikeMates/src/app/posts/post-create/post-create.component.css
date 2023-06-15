@@ -1,6 +1,6 @@
 mat-card {
   width: 80%;
-  margin: auto;
+  margin: 20px auto; /* Add margin to the top region */
 }
 
 mat-form-field,
