@@ -1,50 +1,43 @@
-const express = require('express');
+const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+
+const postsRoutes = require("./routes/posts");
 
 const app = express();
 
-app.use(bodyParser.json());
+mongoose
+  .connect(
+    "mongodb+srv://cooperjack23:xOjAk6JZRvhH80Op@cluster0.ngpka7k.mongodb.net/node-angular?retryWrites=true&w=majority"
+  )
+  .then(() => {
+    console.log("Connected to database!");
+  })
+  .catch(() => {
+    console.log("Connection failed!");
+  });
 
-app.use((request, response, next) => {
-  response.setHeader(
-    "Access-Control-Allow-Origin", "*"
-    );
-  response.setHeader(
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
-    );
-  response.setHeader(
+  );
+  res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS"
-    );
+    "GET, POST, PATCH, PUT, DELETE, OPTIONS"
+  );
   next();
 });
 
-app.post("/api/posts", (request, response, next) => {
-  const post = request.body;
-  console.log(post);
-  response.status(201).json({
-    message: 'Post added successfully'
-  });
-});
-
-app.get('/api/posts', (request, response, next) => {
-  const posts = [
-  {
-    id: 'fdfsfdsfs',
-    title: 'First server side post',
-    content: 'This is coming from the server'
-  },
-  {
-    id: 'wrwerwrewr',
-    title: 'Second server side post',
-    content: 'This is coming from the server again..'
-  }
-];
-  response.status(200).json({
-    message: "Post fetched successfully",
-    posts: posts
-  });
-});
+app.use("/api/posts", postsRoutes);
 
 module.exports = app;
+
+
+
+
+
